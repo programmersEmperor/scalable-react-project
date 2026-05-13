@@ -1,21 +1,25 @@
-import { Themes, useTheme } from './providers/theme-provider'
+import { useEffect } from 'react'
+import { useAuth } from './providers/auth-provider'
+import { useNavigate } from 'react-router'
 
 function Home() {
-  const [theme, setTheme] = useTheme()
+  const { logout, isAuthenticated, user } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated, navigate])
+
   return (
-    <div className="bg-background h-screen w-screen text-3xl font-bold text-foreground">
-      <h1>Theme: {theme}</h1>
+    <div className="bg-background h-screen w-screen text-foreground">
+      <h1>Welcome {user?.name}</h1>
       <button
-        className="bg-blue-500 text-foreground"
-        onClick={() => setTheme(Themes.Light)}
+        className="bg-blue-500 text-white p-2 rounded-md"
+        onClick={logout}
       >
-        Light
-      </button>
-      <button
-        className="bg-red-500 text-foreground"
-        onClick={() => setTheme(Themes.Dark)}
-      >
-        Dark
+        Logout
       </button>
     </div>
   )
